@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anass Kabouri — Développeur Fullstack &amp; IA</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#0B1220;
+  --surface:#111A2E;
+  --surface-2:#16213A;
+  --line:#232E48;
+  --text:#EDEFF4;
+  --muted:#8B93A8;
+  --amber:#E8A33D;
+  --amber-dim:#8a6a2e;
+  --teal:#3FB8AF;
+  --radius:10px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  line-height:1.6;
+  overflow-x:hidden;
+}
+::selection{background:var(--amber); color:#0B1220;}
+a{color:inherit; text-decoration:none;}
+
+.avatar-wrap{width:88px; height:88px; border-radius:50%; margin-bottom:20px; position:relative; overflow:hidden; border:2px solid var(--amber); background:var(--surface-2);}
+.avatar-wrap img{width:100%; height:100%; object-fit:cover; display:block;}
+.avatar-fallback{
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
+  font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.6rem; color:var(--amber);
+}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--amber);
+  display:flex; align-items:center; gap:8px;
+}
+.eyebrow::before{content:''; width:6px; height:6px; background:var(--amber); border-radius:50%; box-shadow:0 0 8px var(--amber);}
+
+h1,h2,h3{font-family:'Space Grotesk',sans-serif; font-weight:600; letter-spacing:-0.01em;}
+
+/* ---------- NAV ---------- */
+nav{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 6vw;
+  background:rgba(11,18,32,0.85);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);
+}
+.logo{
+  font-family:'JetBrains Mono',monospace;
+  font-weight:700; font-size:1rem; color:var(--text);
+}
+.logo span{color:var(--amber);}
+.nav-links{display:flex; gap:28px; font-size:0.88rem; font-family:'JetBrains Mono',monospace;}
+.nav-links a{color:var(--muted); transition:color .2s; position:relative;}
+.nav-links a:hover, .nav-links a:focus-visible{color:var(--text);}
+.nav-links a:hover::after, .nav-links a:focus-visible::after{width:100%;}
+.nav-links a::after{content:''; position:absolute; left:0; bottom:-6px; height:1px; width:0; background:var(--amber); transition:width .25s;}
+.nav-cta{
+  font-family:'JetBrains Mono',monospace; font-size:0.82rem;
+  border:1px solid var(--amber-dim); color:var(--amber);
+  padding:7px 16px; border-radius:6px; transition:all .2s;
+}
+.nav-cta:hover{background:var(--amber); color:#0B1220; border-color:var(--amber);}
+@media(max-width:820px){.nav-links{display:none;}}
+
+/* ---------- HERO ---------- */
+.hero{
+  min-height:100vh;
+  display:flex; align-items:center;
+  padding:120px 6vw 60px;
+  position:relative;
+}
+.hero-grid{
+  display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center;
+  max-width:1200px; margin:0 auto; width:100%;
+}
+.hero h1{
+  font-size:clamp(2.4rem, 5vw, 4rem);
+  line-height:1.05;
+  margin:14px 0 18px;
+}
+.hero h1 .accent{color:var(--amber);}
+.hero p.lede{color:var(--muted); font-size:1.05rem; max-width:480px; margin-bottom:28px;}
+.hero-actions{display:flex; gap:14px; flex-wrap:wrap;}
+.btn{
+  font-family:'JetBrains Mono',monospace; font-size:0.85rem;
+  padding:12px 22px; border-radius:6px; cursor:pointer; border:1px solid transparent;
+  transition:all .2s; display:inline-flex; align-items:center; gap:8px;
+}
+.btn-primary{background:var(--amber); color:#0B1220; font-weight:700;}
+.btn-primary:hover{background:#f4b850; transform:translateY(-1px);}
+.btn-ghost{border:1px solid var(--line); color:var(--text);}
+.btn-ghost:hover{border-color:var(--amber-dim); color:var(--amber);}
+
+.terminal{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+  overflow:hidden;
+}
+.terminal-bar{
+  display:flex; align-items:center; gap:8px;
+  padding:10px 14px; background:var(--surface-2); border-bottom:1px solid var(--line);
+}
+.dot{width:10px; height:10px; border-radius:50%;}
+.dot.r{background:#e5645c;} .dot.y{background:#e5b95c;} .dot.g{background:#5ce589;}
+.terminal-title{font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--muted); margin-left:8px;}
+.terminal-body{
+  font-family:'JetBrains Mono',monospace; font-size:0.85rem;
+  padding:20px; min-height:230px; color:#c7cde0;
+}
+.terminal-body .prompt{color:var(--teal);}
+.terminal-body .out{color:var(--muted);}
+.terminal-body .amber{color:var(--amber);}
+#typed-line::after{content:'▌'; color:var(--amber); animation:blink 1s step-end infinite;}
+@keyframes blink{50%{opacity:0;}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:100px 6vw; max-width:1200px; margin:0 auto;}
+.section-head{margin-bottom:48px; max-width:640px;}
+.section-head h2{font-size:clamp(1.7rem,3vw,2.4rem); margin-top:10px;}
+.reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+.reveal.in{opacity:1; transform:none;}
+
+/* ---------- ABOUT ---------- */
+.about-grid{display:grid; grid-template-columns:1fr 1fr; gap:50px; align-items:start;}
+.about-grid p{color:var(--muted); margin-bottom:16px;}
+.chip-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:20px;}
+.chip{
+  font-family:'JetBrains Mono',monospace; font-size:0.78rem;
+  border:1px solid var(--line); color:var(--muted);
+  padding:6px 12px; border-radius:20px;
+}
+.status-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px;
+}
+.status-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--line); font-size:0.92rem;}
+.status-row:last-child{border-bottom:none;}
+.status-row .k{color:var(--muted);}
+.status-row .v{font-family:'JetBrains Mono',monospace; color:var(--text); text-align:right;}
+
+/* ---------- SKILLS ---------- */
+.modules{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:18px;}
+.module{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:22px; transition:border-color .2s, transform .2s;
+}
+.module:hover{border-color:var(--amber-dim); transform:translateY(-3px);}
+.module-head{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.module-tag{font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--teal); border:1px solid #1f4d49; padding:3px 8px; border-radius:4px;}
+.module h3{font-size:1rem;}
+.module ul{list-style:none; display:flex; flex-wrap:wrap; gap:8px;}
+.module li{font-size:0.82rem; color:var(--muted); background:var(--surface-2); padding:5px 10px; border-radius:5px;}
+
+/* ---------- EXPERIENCE ---------- */
+.timeline{position:relative; padding-left:26px; border-left:1px solid var(--line);}
+.tl-item{position:relative; padding-bottom:44px;}
+.tl-item:last-child{padding-bottom:0;}
+.tl-item::before{content:''; position:absolute; left:-31px; top:4px; width:11px; height:11px; border-radius:50%; background:var(--bg); border:2px solid var(--amber);}
+.tl-head{display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; margin-bottom:6px;}
+.tl-role{font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:1.08rem;}
+.tl-date{font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--amber);}
+.tl-org{color:var(--muted); font-size:0.9rem; margin-bottom:10px;}
+.tl-desc{color:#b8bece; font-size:0.94rem; max-width:640px;}
+.tl-stack{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+
+/* ---------- PROJECTS ---------- */
+.projects{display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:22px;}
+.project-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:26px; display:flex; flex-direction:column; transition:transform .25s, border-color .25s;
+  position:relative; overflow:hidden;
+}
+.project-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--amber), var(--teal)); transform:scaleX(0); transform-origin:left;
+  transition:transform .3s;
+}
+.project-card:hover::before{transform:scaleX(1);}
+.project-card:hover{transform:translateY(-4px); border-color:var(--amber-dim);}
+.project-tag{font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--amber); margin-bottom:10px;}
+.project-card h3{font-size:1.15rem; margin-bottom:10px;}
+.project-card p{color:var(--muted); font-size:0.92rem; flex-grow:1; margin-bottom:16px;}
+.tag-row{display:flex; flex-wrap:wrap; gap:6px;}
+.tag-row span{font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:var(--teal); background:#122824; padding:3px 8px; border-radius:4px;}
+
+.project-featured{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+  padding:32px; margin-bottom:22px; display:grid; grid-template-columns:1.3fr 1fr; gap:32px;
+}
+.project-featured h3{font-size:1.4rem; margin-bottom:12px;}
+.project-featured p{color:var(--muted); font-size:0.95rem; margin-bottom:16px;}
+.feature-list{list-style:none; display:flex; flex-direction:column; gap:10px;}
+.feature-list li{font-size:0.88rem; color:#c7cde0; padding-left:18px; position:relative;}
+.feature-list li::before{content:'▸'; color:var(--amber); position:absolute; left:0;}
+.arch-box{
+  background:var(--surface-2); border:1px solid var(--line); border-radius:8px; padding:20px;
+  font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--muted);
+}
+.arch-box .arch-title{color:var(--teal); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;}
+.arch-row{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);}
+.arch-row:last-child{border-bottom:none;}
+@media(max-width:820px){.project-featured{grid-template-columns:1fr;}}
+
+/* ---------- EDUCATION ---------- */
+.edu-list{display:flex; flex-direction:column; gap:22px;}
+.edu-item{display:grid; grid-template-columns:140px 1fr; gap:20px; padding-bottom:22px; border-bottom:1px solid var(--line);}
+.edu-item:last-child{border-bottom:none;}
+.edu-date{font-family:'JetBrains Mono',monospace; color:var(--amber); font-size:0.85rem;}
+.edu-item h3{font-size:1.02rem; margin-bottom:4px;}
+.edu-item p{color:var(--muted); font-size:0.9rem;}
+
+/* ---------- CONTACT / QR ---------- */
+.contact-wrap{
+  display:grid; grid-template-columns:1.1fr 0.9fr; gap:50px; align-items:center;
+  background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:50px;
+}
+.contact-list{display:flex; flex-direction:column; gap:16px; margin-top:24px;}
+.contact-list a, .contact-list div{
+  display:flex; align-items:center; gap:12px; font-family:'JetBrains Mono',monospace; font-size:0.92rem;
+  color:var(--text); transition:color .2s;
+}
+.contact-list a:hover{color:var(--amber);}
+.icon-box{width:34px; height:34px; border-radius:8px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; border:1px solid var(--line); font-size:0.9rem;}
+.qr-box{
+  background:#fff; padding:18px; border-radius:12px; display:flex; flex-direction:column; align-items:center; gap:12px;
+  margin:0 auto;
+}
+#qrcode{display:block;}
+.qr-caption{font-family:'JetBrains Mono',monospace; font-size:0.72rem; color:#0B1220; text-align:center; max-width:180px;}
+
+footer{
+  text-align:center; padding:40px 6vw 60px; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.8rem;
+  border-top:1px solid var(--line); margin-top:40px;
+}
+
+@media(max-width:820px){
+  .hero-grid, .about-grid, .contact-wrap{grid-template-columns:1fr;}
+  .edu-item{grid-template-columns:1fr;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{transition:none !important; animation:none !important;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Anass<span>-</span>KABOURI</div>
+  <div class="nav-links">
+    <a href="#about">à propos</a>
+    <a href="#skills">compétences</a>
+    <a href="#experience">expérience</a>
+    <a href="#projects">projets</a>
+    <a href="#education">formation</a>
+  </div>
+  <a href="#contact" class="nav-cta">Contact →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-grid">
+    <div>
+      <div class="avatar-wrap">
+        <img id="profile-photo" alt="Photo d'Anass Kabouri" onerror="this.style.display='none'; document.getElementById('avatar-fallback').style.display='flex';">
+        <div id="avatar-fallback" class="avatar-fallback" style="display:none;">AK</div>
+      </div>
+      <div class="eyebrow">Disponible pour une alternance — sept. 2026</div>
+      <h1>Anass Kabouri<br><span class="accent">Développeur Fullstack &amp; IA</span></h1>
+      <p class="lede">Étudiant en 4ᵉ année à l'EPSI Nantes (spécialité IA), je conçois des applications fullstack augmentées par l'IA générative — du pipeline RAG à l'interface utilisateur, jusqu'au déploiement.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Me contacter</a>
+        <a href="#" id="cv-link" class="btn btn-ghost">Télécharger le CV ↓</a>
+        <a href="#projects" class="btn btn-ghost">Voir les projets</a>
+      </div>
+    </div>
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="terminal-title">rag_pipeline.py — akdital-hr-bot</div>
+      </div>
+      <div class="terminal-body">
+<span class="prompt">&gt;&gt;&gt;</span> from pipeline import Anass<br>
+<span class="prompt">&gt;&gt;&gt;</span> dev = Anass(role=<span class="amber">"Fullstack & IA"</span>)<br>
+<span class="prompt">&gt;&gt;&gt;</span> dev.stack()<br>
+<span class="out">['Python','FastAPI','LangChain','React',<br>'Docker','PostgreSQL','MongoDB']</span><br>
+<span class="prompt">&gt;&gt;&gt;</span> dev.status()<br>
+<span id="typed-line" class="out"></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-head reveal">
+    <div class="eyebrow">À propos</div>
+    <h2>De l'idée au déploiement, sans étape sautée.</h2>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <p>Je termine actuellement mon année de spécialisation en développement et intelligence artificielle (DEVIA) à l'EPSI Nantes, en stage chez <strong>Akdital</strong> où je conçois un chatbot RH basé sur une architecture RAG.</p>
+      <p>Mon approche : comprendre le besoin métier, construire une architecture propre (microservices, API, base de données), puis livrer une interface que les utilisateurs veulent réellement utiliser. Je suis à l'aise aussi bien sur la partie IA/data que sur le frontend et le DevOps.</p>
+      <p>Je recherche une alternance de 2 ans (Master) à partir de septembre 2026, sur des missions de développement fullstack et/ou IA appliquée.</p>
+      <div class="chip-row">
+        <span class="chip">Français — natif</span>
+        <span class="chip">Anglais — B2</span>
+        <span class="chip">Allemand — B2</span>
+        <span class="chip">Arabe — natif</span>
+      </div>
+    </div>
+    <div class="status-card reveal">
+      <div class="status-row"><span class="k">Statut</span><span class="v">4ᵉ année — EPSI Nantes</span></div>
+      <div class="status-row"><span class="k">Formation visée</span><span class="v">Master (Bac+5), 2026–2028</span></div>
+      <div class="status-row"><span class="k">Recherche</span><span class="v">Alternance 2 ans</span></div>
+      <div class="status-row"><span class="k">Début souhaité</span><span class="v">Septembre 2026</span></div>
+      <div class="status-row"><span class="k">Localisation</span><span class="v">Nantes — mobile France</span></div>
+      <div class="status-row"><span class="k">Domaines</span><span class="v">IA / Fullstack / Data</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-head reveal">
+    <div class="eyebrow">Stack technique</div>
+    <h2>Les briques que j'assemble.</h2>
+  </div>
+  <div class="modules">
+    <div class="module reveal">
+      <div class="module-head"><span class="module-tag">frontend</span><h3>Interfaces</h3></div>
+      <ul><li>React.js</li><li>JavaScript</li><li>HTML / CSS</li><li>Tailwind CSS</li><li>Streamlit</li><li>Flutter</li></ul>
+    </div>
+    <div class="module reveal">
+      <div class="module-head"><span class="module-tag">backend</span><h3>Services &amp; API</h3></div>
+      <ul><li>Python</li><li>FastAPI</li><li>API REST</li><li>PHP</li></ul>
+    </div>
+    <div class="module reveal">
+      <div class="module-head"><span class="module-tag">ia / data</span><h3>IA générative &amp; data</h3></div>
+      <ul><li>LangChain</li><li>ChromaDB</li><li>OpenAI API (GPT-4o-mini)</li><li>RAG</li><li>scikit-learn</li></ul>
+    </div>
+    <div class="module reveal">
+      <div class="module-head"><span class="module-tag">infra</span><h3>DevOps &amp; données</h3></div>
+      <ul><li>Docker</li><li>Git / GitHub</li><li>CI/CD</li><li>PostgreSQL</li><li>MongoDB</li><li>SQL</li><li>PowerShell</li></ul>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-head reveal">
+    <div class="eyebrow">Expérience</div>
+    <h2>Ce que j'ai déjà construit.</h2>
+  </div>
+  <div class="timeline reveal">
+    <div class="tl-item">
+      <div class="tl-head"><span class="tl-role">Développeur IA — Chatbot RH (RAG)</span><span class="tl-date">2026</span></div>
+      <div class="tl-org">Stage — Akdital, Nantes</div>
+      <div class="tl-desc">Conception et développement d'un chatbot RH interne reposant sur une architecture RAG : indexation des documents, récupération contextuelle et génération de réponses via GPT-4o-mini, exposé par une API FastAPI et déployé avec Docker.</div>
+      <div class="tl-stack"><span class="chip">LangChain</span><span class="chip">ChromaDB</span><span class="chip">FastAPI</span><span class="chip">React.js</span><span class="chip">Docker</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-head"><span class="tl-role">Développeur — Solution de supervision météorologique</span><span class="tl-date">2025</span></div>
+      <div class="tl-org">Stage (3 mois) — Le Voyage, Toulouse</div>
+      <div class="tl-desc">Conception et mise en production d'une solution complète de surveillance météorologique pour le Carrousel des Mondes Marins. Création d'outils internes et de supervision système avec notifications automatiques, rédaction de documentation et tests sur machine virtuelle.</div>
+      <div class="tl-stack"><span class="chip">Python</span><span class="chip">PHP</span><span class="chip">HTML/CSS</span><span class="chip">PowerShell</span><span class="chip">SQL</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-head"><span class="tl-role">Développeur Frontend — Système de gestion des incidents</span><span class="tl-date">Avr. – Juin 2025</span></div>
+      <div class="tl-org">Stage technique — CapHolding (MultiSac), Bouznika</div>
+      <div class="tl-desc">Conception et développement d'une application web de gestion des incidents (déclaration, assignation, suivi, résolution) avec trois rôles distincts (Admin, Technicien, Utilisateur). Modélisation UML complète (cas d'utilisation, classes, séquence) puis développement d'une architecture 100% frontend avec persistance des données côté client, tableau de bord statistiques et système de notifications.</div>
+      <div class="tl-stack"><span class="chip">React.js</span><span class="chip">React Router</span><span class="chip">Tailwind CSS</span><span class="chip">UML</span><span class="chip">IndexedDB</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-head"><span class="tl-role">Software Developer</span><span class="tl-date">2024</span></div>
+      <div class="tl-org">Stage (3 mois) — GM-SOFT</div>
+      <div class="tl-desc">Création d'un site web moderne avec React.js pour une agence cliente, incluant des pages de présentation de services et une gestion de contenu dynamique. Développement d'une application mobile Flutter pour la gestion de présence (pointage, suivi en temps réel). Développement d'un script Python pour automatiser les sauvegardes entre plusieurs sous-serveurs et un serveur principal.</div>
+      <div class="tl-stack"><span class="chip">React.js</span><span class="chip">Flutter</span><span class="chip">Python</span></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-head"><span class="tl-role">Stage d'observation — développement backend</span><span class="tl-date">2022 – 2023</span></div>
+      <div class="tl-org">MibTech</div>
+      <div class="tl-desc">Découverte des processus de développement backend en environnement professionnel.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-head reveal">
+    <div class="eyebrow">Projets</div>
+    <h2>Projets académiques &amp; personnels.</h2>
+  </div>
+  <div class="project-featured reveal">
+    <div>
+      <div class="project-tag">PROJET PHARE · MSPR · IA SANTÉ</div>
+      <h3>JARMY — HealthAI Coach</h3>
+      <p>Coach santé intelligent développé en groupe sur trois tranches de projet (MSPR TPRE501–503) : de l'architecture backend jusqu'à la soutenance, avec une variante "Atelier Services Web" intégrant l'authentification Google.</p>
+      <ul class="feature-list">
+        <li>Architecture microservices : 7 services indépendants communiquant entre eux, orchestrés avec Docker Compose</li>
+        <li>Bases de données PostgreSQL et MongoDB pour séparer données relationnelles et données non structurées</li>
+        <li>Pipeline ETL pour l'ingestion et la transformation des données de santé</li>
+        <li>Authentification SSO via Google OAuth sur la variante Atelier Services Web</li>
+        <li>Application mobile connectée aux microservices backend</li>
+        <li>Pipelines CI/CD pour l'intégration et le déploiement continus</li>
+        <li>Documentation technique complète et soutenance orale du projet</li>
+      </ul>
+      <div class="tag-row"><span>Microservices</span><span>Docker Compose</span><span>PostgreSQL</span><span>MongoDB</span><span>OAuth</span><span>CI/CD</span><span>Mobile</span></div>
+    </div>
+    <div class="arch-box">
+      <div class="arch-title">Architecture — aperçu</div>
+      <div class="arch-row"><span>Services backend</span><span>7 microservices</span></div>
+      <div class="arch-row"><span>Base relationnelle</span><span>PostgreSQL</span></div>
+      <div class="arch-row"><span>Base non structurée</span><span>MongoDB</span></div>
+      <div class="arch-row"><span>Orchestration</span><span>Docker Compose</span></div>
+      <div class="arch-row"><span>Auth (variante web)</span><span>Google OAuth SSO</span></div>
+      <div class="arch-row"><span>Déploiement</span><span>Pipelines CI/CD</span></div>
+      <div class="arch-row"><span>Client</span><span>App mobile</span></div>
+    </div>
+  </div>
+  <div class="projects">
+    <div class="project-card reveal">
+      <div class="project-tag">IA GÉNÉRATIVE · RH</div>
+      <h3>Chatbot RH — Akdital</h3>
+      <p>Assistant RH conversationnel basé sur une architecture RAG, capable de répondre aux questions des employés en s'appuyant sur la base documentaire interne de l'entreprise.</p>
+      <div class="tag-row"><span>LangChain</span><span>ChromaDB</span><span>FastAPI</span><span>React.js</span></div>
+    </div>
+    <div class="project-card reveal">
+      <div class="project-tag">GESTION · UML · FRONTEND</div>
+      <h3>Gestionnaire d'incidents — MultiSac</h3>
+      <p>Application web de gestion des incidents avec trois rôles (Admin, Technicien, Utilisateur) : déclaration, assignation, suivi et résolution. Conception UML complète (cas d'utilisation, classes, séquence) et architecture 100% frontend avec tableau de bord statistiques.</p>
+      <div class="tag-row"><span>React.js</span><span>React Router</span><span>Tailwind CSS</span><span>UML</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="section-head reveal">
+    <div class="eyebrow">Formation</div>
+    <h2>Parcours académique.</h2>
+  </div>
+  <div class="edu-list reveal">
+    <div class="edu-item">
+      <div class="edu-date">2026 — 2028</div>
+      <div><h3>Master — Expert en Informatique et Système d'Information</h3><p>EPSI Nantes · en alternance (visé)</p></div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-date">2025 — 2026</div>
+      <div><h3>Bachelor — Développement &amp; Intelligence Artificielle (DEVIA)</h3><p>EPSI Nantes</p></div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-date">2023 — 2025</div>
+      <div><h3>DUT Informatique</h3><p>Maroc</p></div>
+    </div>
+    <div class="edu-item">
+      <div class="edu-date">2022 — 2023</div>
+      <div><h3>Baccalauréat — Sciences Physiques</h3><p>Maroc</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-head reveal">
+    <div class="eyebrow">Contact</div>
+    <h2>Discutons de votre alternance.</h2>
+  </div>
+  <div class="contact-wrap reveal">
+    <div>
+      <p style="color:var(--muted); max-width:440px;">Disponible pour une alternance de 2 ans à partir de septembre 2026, partout en France. N'hésitez pas à me contacter directement.</p>
+      <div class="contact-list">
+        <a href="mailto:anaskabouri159@gmail.com"><span class="icon-box">✉</span> anaskabouri159@gmail.com</a>
+        <a href="tel:+33688935161"><span class="icon-box">☎</span> +33 6 88 93 51 61</a>
+        <div><span class="icon-box">📍</span> Nantes, France</div>
+        <a href="#" id="linkedin-link"><span class="icon-box">in</span> LinkedIn</a>
+        <a href="#" id="github-link"><span class="icon-box">⌥</span> GitHub</a>
+      </div>
+    </div>
+    <div class="qr-box">
+      <img id="qrcode" width="160" height="160" alt="QR code vers le portfolio">
+      <div class="qr-caption">Scannez pour retrouver ce portfolio en ligne</div>
+      <a id="qr-fallback-link" href="#" target="_blank" rel="noopener" style="font-family:'JetBrains Mono',monospace; font-size:0.68rem; color:#0B1220; text-decoration:underline;">Ou cliquez ici</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2026 Anass Kabouri — Développeur Fullstack &amp; Intelligence Artificielle
+</footer>
+
+<script>
+// ====== CONFIG — à personnaliser avant hébergement ======
+const CONFIG = {
+  PORTFOLIO_URL: "https://anass-kabouri.github.io/portfolio",  // <-- remplace par ton URL réelle (GitHub Pages, Vercel, etc.)
+  LINKEDIN_URL: "https://www.linkedin.com/in/anass-kabouri-5483312a3/",
+  GITHUB_URL: "https://github.com/anass-kabouri",
+  CV_URL: "#",                                                 // <-- lien vers ton CV PDF une fois uploadé
+  PHOTO_URL: "photo.jpg"                                       // <-- mets ta photo dans le même dossier que ce fichier, nommée "photo.jpg" (ou change ce chemin)
+};
+
+const photoEl = document.getElementById('profile-photo');
+if (CONFIG.PHOTO_URL) {
+  photoEl.src = CONFIG.PHOTO_URL;
+} else {
+  photoEl.style.display = 'none';
+  document.getElementById('avatar-fallback').style.display = 'flex';
+}
+
+document.getElementById('linkedin-link').href = CONFIG.LINKEDIN_URL;
+document.getElementById('github-link').href = CONFIG.GITHUB_URL;
+document.getElementById('cv-link').href = CONFIG.CV_URL;
+
+// QR code généré via une image, avec un service de secours si le premier échoue
+const qrTarget = CONFIG.PORTFOLIO_URL;
+const qrPrimary = "file:///C:/Users/anask/Downloads/portfolio%20(2).html#contact" + encodeURIComponent(qrTarget);
+const qrBackup  = "https://chart.googleapis.com/chart?cht=qr&chs=160x160&chl=" + encodeURIComponent(qrTarget);
+const qrImg = document.getElementById('qrcode');
+qrImg.onerror = function(){ qrImg.onerror = null; qrImg.src = qrBackup; };
+qrImg.src = qrPrimary;
+document.getElementById('qr-fallback-link').href = qrTarget;
+
+// terminal typed line
+const line = "Ready → open to alternance opportunities, Sept 2026";
+const el = document.getElementById('typed-line');
+let i = 0;
+function typeChar(){
+  if(i <= line.length){
+    el.textContent = line.slice(0, i);
+    i++;
+    setTimeout(typeChar, 38);
+  }
+}
+setTimeout(typeChar, 500);
+
+// scroll reveal
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      observer.unobserve(entry.target);
+    }
+  });
+}, {threshold: 0.15});
+revealEls.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
